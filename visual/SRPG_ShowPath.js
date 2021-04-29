@@ -80,7 +80,7 @@
 	// highlight the route to the chosen destination
 	Game_Temp.prototype.showRoute = function(destX, destY) {
 		this._activeRoute = [];
-		if (destX == undefined || destY == undefined) return;
+		if (!$gameMap.isValid(destX, destY)) return;
 		var moveTable = $gameTemp.MoveTable(destX, destY);
 		var list = $gameTemp.moveList();
 		if (!moveTable || !list || !list[0]) return;
