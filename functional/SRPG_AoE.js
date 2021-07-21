@@ -670,6 +670,7 @@
 			actionArray[1].action(0).setItemObject(nextaction.item);
 			var targetArray = $gameSystem.EventToUnit(nextaction.event.eventId());
 			$gameTemp.setTargetEvent(nextaction.event);
+			$gameTemp.setSrpgDistance($gameSystem.unitDistance($gameTemp.activeEvent(), nextaction.event));
 			if (_refocus) {
 				$gameTemp.setAutoMoveDestinationValid(true);
 				$gameTemp.setAutoMoveDestination($gameTemp.targetEvent().posX(), $gameTemp.targetEvent().posY());
