@@ -514,6 +514,10 @@
 		var bestTarget = null;
 		var bestTargetPos = null;
 		var bestPos = null;
+		
+		var bestTargetArray = [];
+		var bestTargetPosArray = [];
+		var bestPosArray = [];
 
 		if (!isAoE) { // targeting a single unit
 			$gameMap.events().forEach(function(target) {
@@ -524,21 +528,30 @@
 					var pos = posList[i];
 					var priority = false;
 					var score = target.targetScore(user, action, pos);
-
 					// check priority target
 					if (score >= 0 && $gameTemp.isSrpgPriorityTarget() == target) {
 						priority = true;
 					}
-
-					// pick the best target
-					if ((priority && !bestPriority) || (score > bestScore && priority == bestPriority)) {
+					if ( (priority && !bestPriority) || (score > bestScore && priority == bestPriority) ) {
+						bestTargetArray = []; bestPosArray = []; //clear options (as there is a better one)
 						bestScore = score;
 						bestPriority = priority;
-						bestTarget = target;
-						bestPos = pos;
+						bestTargetArray.push(target);
+						bestPosArray.push(pos);
+					} //target has same score as the last ones
+					else if (score == bestScore && score > 0 && priority == bestPriority) {
+						bestTargetArray.push(target);
+						bestPosArray.push(pos);
 					}
 				}
 			});
+			if (bestTargetArray.length != 0){
+				//choose an option from the arrays randomly
+				var randomIndex = Math.floor(Math.random()*bestTargetArray.length);
+				bestTarget = bestTargetArray[randomIndex];
+				bestPos = bestPosArray[randomIndex];
+				bestTargetArray = []; bestPosArray = []; //clear options (as to not leave junk)
+			}
 		} else { // targeting an AoE effect
 			$gameTemp.moveList().forEach(function (targetPos) {
 				if (!targetPos) return;
@@ -577,13 +590,25 @@
 
 					// pick the best target position
 					if ((priority && !bestPriority) || (score > bestScore && priority == bestPriority)) {
+						bestTargetArray = []; bestPosArray = [];
 						bestScore = score;
 						bestPriority = priority;
-						bestTargetPos = {x: targetPos[0], y: targetPos[1], dir: d};
-						bestPos = pos;
+						bestTargetArray.push({x: targetPos[0], y: targetPos[1], dir: d});
+						bestPosArray.push(pos);
+					}
+					else if (score == bestScore && score > 0 && priority == bestPriority) {
+						bestTargetArray.push({x: targetPos[0], y: targetPos[1], dir: d});
+						bestPosArray.push(pos);
 					}
 				}
 			});
+			if (bestTargetArray.length != 0){
+				//choose an option from the arrays randomly
+				var randomIndex = Math.floor(Math.random()*bestTargetArray.length);
+				bestTargetPos = bestTargetArray[randomIndex]; //AoE uses BestTargetPos instead of BestTarget
+				bestPos = bestPosArray[randomIndex];
+				bestTargetArray = []; bestPosArray = []; //clear options (as to not leave junk)
+			}
 		}
 
 		// set up AoE targets
