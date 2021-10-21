@@ -63,7 +63,8 @@
  *
  * After choosing a skill the AI will examine all possible targets within range,
  * from all possible positions, and select the one with the highest Target Score.
- * Targets with a score of 0 or less are ignored.
+ * Targets with a score of 0 or less are ignored. Note if multiple targets have
+ * a similar Target Score, the AI will choose one of them at random.
  *
  * Target Score is calculated by multiplying the result of the Target Formula by
  * the Target Rate (tgr) stat. If a unit has a target rate of 0% it will be the
@@ -71,7 +72,8 @@
  * Rate for this skill, including a target rate of 0.
  *
  * AoE skills combine the score of all targets in the area, so they usually
- * choose the option that hits the most targets.
+ * choose the option that hits the most targets. Again, if there's more than one
+ * correct position for the AoE, the AI will choose one at random.
  *
  * If you use the <aiFriendRate> or <aiOpponentRate> notetags on the skill, it
  * applies an additional multiplier to their target score, on top of Target Rate.
